@@ -10,3 +10,6 @@ VContainer.EnableCodeGen.csproj
 VContainer.sln
 VContainer.Tests.csproj
 .vs/
+VContainer.apk
+VContainerPractice.sln
+Temp/
