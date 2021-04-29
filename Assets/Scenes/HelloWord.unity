@@ -437,7 +437,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9e8ab7b6a637b94885f63d08c2483aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HelloButton: {fileID: 0}
+  HelloButton: {fileID: 549772996}
 --- !u!114 &549772996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -689,7 +689,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1809333943}
   - component: {fileID: 1809333944}
-  - component: {fileID: 1809333945}
   m_Layer: 0
   m_Name: 'GameLifetimeScope '
   m_TagString: Untagged
@@ -728,15 +727,3 @@ MonoBehaviour:
   autoRun: 1
   autoInjectGameObjects: []
   helloScreen: {fileID: 549772995}
---- !u!114 &1809333945
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1809333942}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a0d6643af96275459f346023c8c3121, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

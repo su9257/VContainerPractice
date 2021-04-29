@@ -10,9 +10,9 @@ namespace HelloWorld
         HelloScreen helloScreen;
         protected override void Configure(IContainerBuilder builder)
         {
-            builder.Register<HelloWorldService>(Lifetime.Singleton);
-            builder.RegisterEntryPoint<GamePresenter>(Lifetime.Singleton);
+            builder.Register<HelloWorldService>(Lifetime.Singleton);//某一个功能
             builder.RegisterComponent(helloScreen);
+            builder.RegisterEntryPoint<GamePresenter>(Lifetime.Singleton);
         }
     }
 }
