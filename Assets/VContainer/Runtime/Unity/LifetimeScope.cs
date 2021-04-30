@@ -58,15 +58,6 @@ namespace VContainer.Unity
         public static ExtraInstallationScope Enqueue(IInstaller installer)
             => new ExtraInstallationScope(installer);
 
-        [Obsolete("LifetimeScope.PushParent is obsolete. Use LifetimeScope.EnqueueParent instead.", false)]
-        public static ParentOverrideScope PushParent(LifetimeScope parent) => new ParentOverrideScope(parent);
-
-        [Obsolete("LifetimeScope.Push is obsolete. Use LifetimeScope.Enqueue instead.", false)]
-        public static ExtraInstallationScope Push(Action<IContainerBuilder> installing) => Enqueue(installing);
-
-        [Obsolete("LifetimeScope.Push is obsolete. Use LifetimeScope.Enqueue instead.", false)]
-        public static ExtraInstallationScope Push(IInstaller installer) => Enqueue(installer);
-
         public static LifetimeScope Find<T>(Scene scene) where T : LifetimeScope => Find(typeof(T), scene);
         public static LifetimeScope Find<T>() where T : LifetimeScope => Find(typeof(T));
 

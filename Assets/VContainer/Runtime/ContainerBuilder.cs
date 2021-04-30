@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace VContainer
 {
+    /// <summary>
+    /// Container 注册、绑定接口
+    /// </summary>
+    /// <remarks>
+    /// 用于注册和绑定各种类型的职责
+    /// </remarks>
     public interface IContainerBuilder
     {
         object ApplicationOrigin { get; set; }
