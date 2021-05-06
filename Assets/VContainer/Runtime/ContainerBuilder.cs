@@ -7,21 +7,11 @@ using System.Threading.Tasks;
 
 namespace VContainer
 {
-    /// <summary>
-    /// Container 注册、绑定接口
-    /// </summary>
-    /// <remarks>
-    /// 用于注册和绑定各种类型的职责
-    /// </remarks>
     public interface IContainerBuilder
     {
         object ApplicationOrigin { get; set; }
-
-        RegistrationBuilder Register(Type type, Lifetime lifetime);
-        RegistrationBuilder RegisterInstance(object instance);
-        RegistrationBuilder Register(RegistrationBuilder registrationBuilder);
+        T Register<T>(T registrationBuilder) where T : RegistrationBuilder;
         void RegisterBuildCallback(Action<IObjectResolver> container);
-
         bool Exists(Type type, bool includeInterfaceTypes = false);
     }
 
@@ -55,13 +45,7 @@ namespace VContainer
         readonly IList<RegistrationBuilder> registrationBuilders = new List<RegistrationBuilder>();
         List<Action<IObjectResolver>> buildCallbacks;
 
-        public RegistrationBuilder Register(Type type, Lifetime lifetime)
-            => Register(new RegistrationBuilder(type, lifetime));
-
-        public RegistrationBuilder RegisterInstance(object instance)
-            => Register(new RegistrationBuilder(instance));
-
-        public RegistrationBuilder Register(RegistrationBuilder registrationBuilder)
+        public T Register<T>(T registrationBuilder) where T : RegistrationBuilder
         {
             registrationBuilders.Add(registrationBuilder);
             return registrationBuilder;

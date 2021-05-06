@@ -55,7 +55,7 @@ namespace VContainer.Internal
                 }
                 else
                 {
-                    collection = new CollectionRegistration(service) { exists };
+                    collection = new CollectionRegistration(collectionService, service) { exists };
                     AddCollectionToBuildBuffer(buf, collection);
                 }
                 collection.Add(registration);
@@ -94,28 +94,33 @@ namespace VContainer.Internal
             if (hashTable.TryGet(interfaceType, out registration))
                 return registration != null;
 
-            // Auto falling back to collection from one
-            if (interfaceType.IsGenericType)
+            if (interfaceType.IsConstructedGenericType)
             {
-                // TODO:
                 var genericType = interfaceType.GetGenericTypeDefinition();
-                if (genericType == typeof(IEnumerable<>) ||
-                    genericType == typeof(IReadOnlyList<>))
-                {
-                    var elementType = interfaceType.GetGenericArguments()[0];
-                    var collectionRegistration = new CollectionRegistration(elementType);
-                    // ReSharper disable once InconsistentlySynchronizedField
-                    if (hashTable.TryGet(elementType, out var elementRegistration))
-                    {
-                        collectionRegistration.Add(elementRegistration);
-                    }
-                    registration = collectionRegistration;
-                    return true;
-                }
+                return TryFallbackSingleCollection(interfaceType, genericType, out registration);
             }
             return false;
         }
 
         public bool Exists(Type type) => hashTable.TryGet(type, out _);
+
+        bool TryFallbackSingleCollection(Type interfaceType, Type genericType, out IRegistration registration)
+        {
+            if (genericType == typeof(IEnumerable<>) ||
+                genericType == typeof(IReadOnlyList<>))
+            {
+                var elementType = interfaceType.GetGenericArguments()[0];
+                var collectionRegistration = new CollectionRegistration(elementType);
+                // ReSharper disable once InconsistentlySynchronizedField
+                if (hashTable.TryGet(elementType, out var elementRegistration) && elementRegistration != null)
+                {
+                    collectionRegistration.Add(elementRegistration);
+                }
+                registration = collectionRegistration;
+                return true;
+            }
+            registration = null;
+            return false;
+        }
     }
 }

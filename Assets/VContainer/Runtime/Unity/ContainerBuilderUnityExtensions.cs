@@ -10,6 +10,18 @@ namespace VContainer.Unity
 {
     public readonly struct EntryPointsBuilder
     {
+        public static void EnsureDispatcherRegistered(IContainerBuilder containerBuilder)
+        {
+            if (!containerBuilder.Exists(typeof(EntryPointDispatcher), false))
+            {
+                containerBuilder.Register<EntryPointDispatcher>(Lifetime.Scoped);
+                containerBuilder.RegisterBuildCallback(container =>
+                {
+                    container.Resolve<EntryPointDispatcher>().Dispatch();
+                });
+            }
+        }
+
         readonly IContainerBuilder containerBuilder;
         readonly Lifetime lifetime;
 
@@ -64,6 +76,7 @@ namespace VContainer.Unity
             Lifetime lifetime,
             Action<EntryPointsBuilder> configuration)
         {
+            EntryPointsBuilder.EnsureDispatcherRegistered(builder);
             configuration(new EntryPointsBuilder(builder, lifetime));
         }
 
@@ -82,14 +95,7 @@ namespace VContainer.Unity
 
         public static RegistrationBuilder RegisterEntryPoint<T>(this IContainerBuilder builder, Lifetime lifetime = Lifetime.Singleton)
         {
-            if (!builder.Exists(typeof(EntryPointDispatcher), false))
-            {
-                builder.Register<EntryPointDispatcher>(Lifetime.Scoped);
-                builder.RegisterBuildCallback(container =>
-                {
-                    container.Resolve<EntryPointDispatcher>().Dispatch();
-                });
-            }
+            EntryPointsBuilder.EnsureDispatcherRegistered(builder);
             return builder.Register<T>(lifetime).AsImplementedInterfaces();
         }
 
@@ -102,14 +108,10 @@ namespace VContainer.Unity
 
         public static RegistrationBuilder RegisterComponent<TInterface>(this IContainerBuilder builder, TInterface component)
         {
-            var registrationBuilder = builder.RegisterInstance(component).As(typeof(TInterface));
-            if (component is MonoBehaviour)
-            {
-                // Force inject execution
-                registrationBuilder
-                    .OnAfterBuild((registration, container) => registration.SpawnInstance(container));
-            }
-            return registrationBuilder;
+            var registrationBuilder = new ComponentRegistrationBuilder(component).As(typeof(TInterface));
+            // Force inject execution
+            registrationBuilder.OnAfterBuild((registration, container) => registration.SpawnInstance(container));
+            return builder.Register(registrationBuilder);
         }
 
         public static ComponentRegistrationBuilder RegisterComponentInHierarchy<T>(this IContainerBuilder builder)
@@ -120,8 +122,7 @@ namespace VContainer.Unity
             var registrationBuilder = new ComponentRegistrationBuilder(scene, typeof(T));
             // Force inject execution
             registrationBuilder.OnAfterBuild((registration, container) => registration.SpawnInstance(container));
-            builder.Register(registrationBuilder);
-            return registrationBuilder;
+            return builder.Register(registrationBuilder);
         }
 
         public static ComponentRegistrationBuilder RegisterComponentOnNewGameObject<T>(
@@ -130,12 +131,7 @@ namespace VContainer.Unity
             string newGameObjectName = null)
             where T : Component
         {
-            var registrationBuilder = new ComponentRegistrationBuilder(
-                newGameObjectName,
-                typeof(T),
-                lifetime);
-            builder.Register(registrationBuilder);
-            return registrationBuilder;
+            return builder.Register(new ComponentRegistrationBuilder(newGameObjectName, typeof(T), lifetime));
         }
 
         public static ComponentRegistrationBuilder RegisterComponentInNewPrefab<T>(
@@ -144,12 +140,7 @@ namespace VContainer.Unity
             Lifetime lifetime)
             where T : Component
         {
-            var registrationBuilder = new ComponentRegistrationBuilder(
-                prefab,
-                typeof(T),
-                lifetime);
-            builder.Register(registrationBuilder);
-            return registrationBuilder;
+            return builder.Register(new ComponentRegistrationBuilder(prefab, typeof(T), lifetime));
         }
 
 #if VCONTAINER_ECS_INTEGRATION
@@ -205,9 +196,8 @@ namespace VContainer.Unity
             if (system is null)
                 throw new ArgumentException($"{typeof(T).FullName} is not in the world {world}");
 
-            return builder.RegisterInstance(system)
-                .As(typeof(ComponentSystemBase))
-                .AsSelf();
+            return builder.RegisterComponent(system)
+                .As(typeof(ComponentSystemBase), typeof(T));
         }
 
         // Use custom world
@@ -241,8 +231,7 @@ namespace VContainer.Unity
             var registrationBuilder = new SystemRegistrationBuilder(typeof(T), worldName)
                 .IntoGroup<SimulationSystemGroup>();
 
-            builder.Register(registrationBuilder);
-            return registrationBuilder;
+            return builder.Register(registrationBuilder);
         }
 
         public static SystemRegistrationBuilder RegisterSystemIntoDefaultWorld<T>(this IContainerBuilder builder)
@@ -251,8 +240,7 @@ namespace VContainer.Unity
             var registrationBuilder = new SystemRegistrationBuilder(typeof(T), null)
                 .IntoGroup<SimulationSystemGroup>();
 
-            builder.Register(registrationBuilder);
-            return registrationBuilder;
+            return builder.Register(registrationBuilder);
         }
 #endif
     }

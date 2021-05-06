@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -14,6 +15,7 @@ namespace HelloWorld
             builder.RegisterComponent(helloScreen);
             //builder.Register<GamePresenter>(Lifetime.Singleton).As<ITickable>().As<IStartable>();
             builder.RegisterEntryPoint<GamePresenter>(Lifetime.Singleton);
+            
         }
     }
 

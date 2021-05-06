@@ -16,13 +16,6 @@ namespace QuickStart
         }
     }
 
-    public interface IRouteSearch
-    {
-    }
-
-    public class AStarRouteSearch : IRouteSearch
-    {
-    }
 
     public class CharacterService
     {
