@@ -55,7 +55,10 @@ namespace VContainer.Internal
                 }
                 else
                 {
-                    collection = new CollectionRegistration(collectionService, service) { exists };
+                    collection = new CollectionRegistration(collectionService, service)
+                    {
+                        exists
+                    };
                     AddCollectionToBuildBuffer(buf, collection);
                 }
                 collection.Add(registration);

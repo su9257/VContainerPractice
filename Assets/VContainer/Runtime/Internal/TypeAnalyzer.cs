@@ -59,6 +59,9 @@ namespace VContainer.Internal
     //     }
     // }
 
+    /// <summary>
+    /// 对应类里面需要注入的信息集合
+    /// </summary>
     sealed class InjectTypeInfo
     {
         public readonly Type Type;

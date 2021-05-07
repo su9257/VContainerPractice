@@ -4,6 +4,12 @@ using System.Collections.Generic;
 
 namespace VContainer.Internal
 {
+    /// <summary>
+    /// 注册对应类型的字段
+    /// <remark>
+    /// 含有注入对应类型的所有信息（参数、生命周期、inject的字段等等）
+    /// </remark>
+    /// </summary>
     sealed class Registration : IRegistration
     {
         public Type ImplementationType { get; }

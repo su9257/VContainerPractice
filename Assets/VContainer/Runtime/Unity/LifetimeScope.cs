@@ -238,6 +238,10 @@ namespace VContainer.Unity
             builder.RegisterInstance<LifetimeScope>(this).AsSelf();
         }
 
+        /// <summary>
+        /// 优先查找ParentReference，然后在查找VContainerSettings序列化asset文件
+        /// </summary>
+        /// <returns></returns>
         LifetimeScope GetRuntimeParent()
         {
             if (IsRoot) return null;

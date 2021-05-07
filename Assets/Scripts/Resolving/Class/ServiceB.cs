@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using VContainer.Unity;
 
 namespace Resolving
 {
-    public class ServiceB : IServiceB
+    public class ServiceB : IServiceB, IStartable
     {
         private string flag;
         public static ServiceB GoodLocalDefault
@@ -23,6 +24,11 @@ namespace Resolving
         public void Print()
         {
             Debug.Log($"flag:{flag}");
+        }
+
+        public void Start()
+        {
+            Print();
         }
     }
 }

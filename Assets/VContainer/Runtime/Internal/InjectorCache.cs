@@ -17,7 +17,6 @@ namespace VContainer.Internal
                 {
                     return (IInjector)getter.Invoke(null, null);
                 }
-
                 return ReflectionInjector.Build(type);
             });
         }

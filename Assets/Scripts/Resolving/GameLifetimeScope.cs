@@ -10,6 +10,7 @@ namespace Resolving
             builder.Register<IServiceA, ServiceA>(Lifetime.Singleton).WithParameter("A");
             builder.Register<IServiceA, ServiceAExtension>(Lifetime.Singleton).WithParameter("AExtension");
             builder.Register<IServiceB, ServiceB>(Lifetime.Singleton).WithParameter("B");
+            builder.Register<ServiceC>(Lifetime.Singleton);
             builder.RegisterComponentOnNewGameObject<SomeUnityComponent>(Lifetime.Singleton);
             builder.RegisterEntryPoint<ClassA>(Lifetime.Singleton);
         }
