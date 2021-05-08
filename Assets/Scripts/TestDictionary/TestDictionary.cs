@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Reflection;
+using static VContainer.Unity.LifetimeScope;
 
 public class TestDictionary : MonoBehaviour
 {
@@ -15,16 +16,16 @@ public class TestDictionary : MonoBehaviour
 
         var freeCount = freeCountFieldInfo.GetValue(keyValuePairs);
         var count = countFieldInfo.GetValue(keyValuePairs);
-        var entries =entriesFieldInfo.GetValue(keyValuePairs);
-        
+        var entries = entriesFieldInfo.GetValue(keyValuePairs);
+
         Debug.Log($"freeCount:{freeCount} count:{count} Count:{keyValuePairs.Count}");
 
         for (int i = 0; i < 3; i++)
         {
             keyValuePairs.Add("0_" + i, i);
         }
-         freeCount = freeCountFieldInfo.GetValue(keyValuePairs);
-         count = countFieldInfo.GetValue(keyValuePairs);
+        freeCount = freeCountFieldInfo.GetValue(keyValuePairs);
+        count = countFieldInfo.GetValue(keyValuePairs);
         Debug.Log($"freeCount:{freeCount} count:{count} Count:{keyValuePairs.Count}");
 
         keyValuePairs.Add("1_" + 1, 1);
@@ -36,7 +37,5 @@ public class TestDictionary : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
     }
-
 }

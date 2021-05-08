@@ -58,18 +58,15 @@ namespace VContainer.Unity
         public static ExtraInstallationScope Enqueue(IInstaller installer)
             => new ExtraInstallationScope(installer);
 
-        [Obsolete("LifetimeScope.PushParent is obsolete. Use LifetimeScope.EnqueueParent instead.", false)]
-        public static ParentOverrideScope PushParent(LifetimeScope parent) => new ParentOverrideScope(parent);
-
-        [Obsolete("LifetimeScope.Push is obsolete. Use LifetimeScope.Enqueue instead.", false)]
-        public static ExtraInstallationScope Push(Action<IContainerBuilder> installing) => Enqueue(installing);
-
-        [Obsolete("LifetimeScope.Push is obsolete. Use LifetimeScope.Enqueue instead.", false)]
-        public static ExtraInstallationScope Push(IInstaller installer) => Enqueue(installer);
-
         public static LifetimeScope Find<T>(Scene scene) where T : LifetimeScope => Find(typeof(T), scene);
         public static LifetimeScope Find<T>() where T : LifetimeScope => Find(typeof(T));
 
+        /// <summary>
+        /// 查找场景中所有的物体是否含有LifetimeScope组件
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="scene"></param>
+        /// <returns></returns>
         static LifetimeScope Find(Type type, Scene scene)
         {
             var buffer = UnityEngineObjectListBuffer<GameObject>.Get();
@@ -127,7 +124,7 @@ namespace VContainer.Unity
                 Parent = GetRuntimeParent();
                 if (autoRun)
                 {
-                    Build();
+                    Build();//没有设置父子层级的情况下都会走到这里
                 }
             }
             catch (VContainerParentTypeReferenceNotFound ex)
@@ -167,7 +164,7 @@ namespace VContainer.Unity
             else
             {
                 var builder = new ContainerBuilder { ApplicationOrigin = this };
-                InstallTo(builder);
+                InstallTo(builder);//向 builder 中添加 inject 信息
                 Container = builder.Build();
             }
 
@@ -219,9 +216,13 @@ namespace VContainer.Unity
         public LifetimeScope CreateChildFromPrefab(LifetimeScope prefab, Action<IContainerBuilder> installation)
             => CreateChildFromPrefab(prefab, new ActionInstaller(installation));
 
+        /// <summary>
+        /// 想 容器 builder 中添加 注入信息
+        /// </summary>
+        /// <param name="builder"></param>
         void InstallTo(IContainerBuilder builder)
         {
-            Configure(builder);
+            Configure(builder);//这部分是暴露给上层使用的
 
             foreach (var installer in extraInstallers)
             {
@@ -239,7 +240,7 @@ namespace VContainer.Unity
         }
 
         /// <summary>
-        /// ���Ȳ���ParentReference��Ȼ���ڲ���VContainerSettings���л�asset�ļ�
+        /// 优先查找ParentReference，然后在查找VContainerSettings序列化asset文件
         /// </summary>
         /// <returns></returns>
         LifetimeScope GetRuntimeParent()

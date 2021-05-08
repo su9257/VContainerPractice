@@ -15,7 +15,6 @@ namespace HelloWorld
             builder.RegisterComponent(helloScreen);
             //builder.Register<GamePresenter>(Lifetime.Singleton).As<ITickable>().As<IStartable>();
             builder.RegisterEntryPoint<GamePresenter>(Lifetime.Singleton);
-            
         }
     }
 
