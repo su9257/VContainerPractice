@@ -246,7 +246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentReference:
-    TypeName: Resolving.GameLifetimeScope
+    TypeName: 
   autoRun: 1
   autoInjectGameObjects: []
 --- !u!4 &400946636

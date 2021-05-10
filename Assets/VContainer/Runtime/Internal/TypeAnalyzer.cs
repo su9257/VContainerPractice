@@ -1,4 +1,4 @@
-using System;
+锘縰sing System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
@@ -60,7 +60,7 @@ namespace VContainer.Internal
     // }
 
     /// <summary>
-    /// 对应类里面需要注入的信息集合
+    /// 瀵瑰簲绫婚噷闈㈤渶瑕佹敞鍏ョ殑淇℃伅闆嗗悎
     /// </summary>
     sealed class InjectTypeInfo
     {
@@ -178,6 +178,10 @@ namespace VContainer.Internal
                 injectProperties);
         }
 
+        /// <summary>
+        /// 鍒嗘瀽鏄惁鏈夊惊鐜緷璧栫殑鎯呭喌
+        /// </summary>
+        /// <param name="type"></param>
         public static void CheckCircularDependency(Type type)
         {
             // ThreadStatic

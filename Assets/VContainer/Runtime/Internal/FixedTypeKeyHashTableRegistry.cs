@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -42,7 +42,12 @@ namespace VContainer.Internal
             var hashTable = new FixedTypeKeyHashtable<IRegistration>(buildBuffer.ToArray());
             return new FixedTypeKeyHashTableRegistry(hashTable);
         }
-
+        /// <summary>
+        /// 将原来的接口由一对一，变成一对多
+        /// </summary>
+        /// <param name="buf"></param>
+        /// <param name="service"></param>
+        /// <param name="registration"></param>
         static void AddToBuildBuffer(IDictionary<Type, IRegistration> buf, Type service, IRegistration registration)
         {
             if (buf.TryGetValue(service, out var exists))
